@@ -35,43 +35,43 @@
   }
 
   function processarTexto(versiculosData) {
-    const elementos = document.querySelectorAll('p, span, div, li, h1, h2, h3');
+  const elementos = document.querySelectorAll('p, span, div, li, h1, h2, h3');
 
-    elementos.forEach(el => {
-      if (!el.children.length && regexBiblia.test(el.innerHTML)) {
-        el.innerHTML = el.innerHTML.replace(regexBiblia, (match, livro, cap, verIni, verFim) => {
-          const livroAbrev = livro.replace(/\s|\./g, '');
-          const chaveBase = `${livroAbrev} ${cap}:`;
-          let texto = '';
+  elementos.forEach(el => {
+    if (!el.children.length && regexBiblia.test(el.innerHTML)) {
+      el.innerHTML = el.innerHTML.replace(regexBiblia, (match, livro, cap, verIni, verFim) => {
+        const livroAbrev = livro.replace(/\s|\./g, '');
+        let texto = '';
 
-          if (verFim) {
-            for (let v = parseInt(verIni); v <= parseInt(verFim); v++) {
-              const chave = `${livroAbrev} ${cap}:${v}`;
-              texto += versiculosData[chave] ? `${v}. ${versiculosData[chave]} ` : '';
-            }
-          } else {
-            const chave = `${livroAbrev} ${cap}:${verIni}`;
-            texto = versiculosData[chave] || 'Versículo não encontrado';
+        if (verFim) {
+          for (let v = parseInt(verIni); v <= parseInt(verFim); v++) {
+            const chave = `${livroAbrev} ${cap}:${v}`;
+            texto += versiculosData[chave] ? `${v}. ${versiculosData[chave]} ` : '';
           }
+        } else {
+          const chave = `${livroAbrev} ${cap}:${verIni}`;
+          texto = versiculosData[chave] || 'Versículo não encontrado';
+        }
 
-          const ref = verFim ? `${livroAbrev} ${cap}:${verIni}-${verFim}` : `${livroAbrev} ${cap}:${verIni}`;
-          return `<a href="javascript:void(0)" class="versiculo-link" data-versiculo="${ref}" data-texto="${texto.replace(/"/g, '&quot;')}">${match}</a>`;
-        });
-      }
-    });
+        const ref = verFim ? `${livroAbrev} ${cap}:${verIni}-${verFim}` : `${livroAbrev} ${cap}:${verIni}`;
+        return `<a href="javascript:void(0)" class="versiculo-link" data-versiculo="${ref}" data-texto="${texto.replace(/"/g, '&quot;')}">${match}</a>`;
+      });
+    }
+  });
 
-    document.querySelectorAll('.versiculo-link').forEach(link => {
-      link.addEventListener('mouseover', e => {
-        const texto = e.target.getAttribute('data-texto');
-        mostrarTooltip(texto, e.pageX, e.pageY);
-      });
-      link.addEventListener('mousemove', e => {
-        tooltip.style.left = `${e.pageX + 10}px`;
-        tooltip.style.top = `${e.pageY + 10}px`;
-      });
-      link.addEventListener('mouseout', esconderTooltip);
+  document.querySelectorAll('.versiculo-link').forEach(link => {
+    link.addEventListener('mouseover', e => {
+      const texto = e.target.getAttribute('data-texto');
+      mostrarTooltip(texto, e.pageX, e.pageY);
     });
-  }
+    link.addEventListener('mousemove', e => {
+      tooltip.style.left = `${e.pageX + 10}px`;
+      tooltip.style.top = `${e.pageY + 10}px`;
+    });
+    link.addEventListener('mouseout', esconderTooltip);
+  });
+}
+
 
   fetch(BIBLE_JSON_URL)
     .then(res => res.json())
