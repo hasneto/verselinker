@@ -139,7 +139,12 @@
                 const c = t.trim().toLowerCase(),
                     d = f[c];
                 if (!d) return e;
-                if (x(o, d.cant_capitulos)) return e;
+                if (d.cant_capitulos === 1) {
+    // Se o livro tem apenas 1 capítulo, sempre vai para o capítulo 1
+    p = `${d.id}.1`;
+} else if (x(o, d.cant_capitulos)) {
+    return e;
+}
                 let p = `${d.id}.1`; // Considerando que Judas, Obadias, Filemom, 2João e 3João têm apenas um capítulo
                 return `<a href="${y(t, d.url, 1, n, null, u)}" target="_blank" id_cita="${p}" version="${u}">${e}</a>`
             }));
