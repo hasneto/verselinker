@@ -55,25 +55,10 @@
     }
     
     function x(e, t) {
-      // Se o livro tem apenas 1 capítulo, qualquer referência para capítulos superiores a 1 será ignorada.
-      if (t === 1) {
-        const o = e.split(",");
-        for (let e of o) {
-          if (parseInt(e, 10) > 1) return !0;
-        }
-      }
-      
-      // Caso contrário, verifica se algum capítulo está fora do intervalo válido
       const o = e.split(",");
+      // Checa se o capítulo existe
       for (let e of o) {
-        if (e.includes("-")) {
-          let o = e.split("-");
-          for (let e of o) {
-            if (parseInt(e, 10) > t) return !0;
-          }
-        } else {
-          if (parseInt(e, 10) > t) return !0;
-        }
+        if (parseInt(e, 10) > t) return !0;
       }
       return !1;
     }
