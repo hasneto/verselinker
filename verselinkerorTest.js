@@ -125,9 +125,6 @@
       r.addEventListener("mouseleave", (t) => {
         r && r.contains(t.relatedTarget) || t.relatedTarget === e.target || s && s.contains(t.relatedTarget) || (clearTimeout(c), r.remove(), s = null);
       });
-      e.target.addEventListener("mouseleave", (t) => {
-        r && r.contains(t.relatedTarget) || t.relatedTarget === e.target || s && s.contains(t.relatedTarget) || (clearTimeout(c), r && (r.remove(), s = null));
-      });
       c = setTimeout(async () => {
         try {
           const i = `https://www.bibliatodo.com/api/tooltip/versiculo?id_cita=${t}&version=${o}`;
@@ -145,7 +142,7 @@
           u += "</div>";
           "false" !== n && (u += `<div style="text-align: center; font-size: 12px; margin-top: 10px; background-color: #ECF1FA!important; padding: 5px; border-top: 1px solid #e9ecef;border-radius: 0 0 7px 7px;color: black;">
             <a href="https://www.oticareformada.com" target="_blank" style="color: #0606069e!important; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-              Adaptador por&nbsp;&nbsp;<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj6W249LCXs8KKhYgAn85uKlxXmTIq4_NtFLiURoI4nsQf8ZhDYuCfIsIKl7fv5KBB1PfvVBXoycJyGpUICX3S4pWNMt8QIzORQIsVRtbwbBaHfwf6-gXv9KTP352zmCBrS8xu9UlYCs78HS3mEGyXr7OvP43rJ26D4B_7y1k88Po-j-dGGMdgciaAToQ/s1600/icone3.png" alt="Ótica Reformada" style="height: 14px; margin-right: 5px;" /> oticreformada.com
+              Adaptado por&nbsp;&nbsp;<img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj6W249LCXs8KKhYgAn85uKlxXmTIq4_NtFLiURoI4nsQf8ZhDYuCfIsIKl7fv5KBB1PfvVBXoycJyGpUICX3S4pWNMt8QIzORQIsVRtbwbBaHfwf6-gXv9KTP352zmCBrS8xu9UlYCs78HS3mEGyXr7OvP43rJ26D4B_7y1k88Po-j-dGGMdgciaAToQ/s1600/icone3.png" alt="Ótica Reformada" style="height: 14px; margin-right: 5px;" /> oticreformada.com
             </a>
           </div>`);
           r.innerHTML = u;
