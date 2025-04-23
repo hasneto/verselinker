@@ -36,7 +36,7 @@
             b = new Map;
 
         function h(e) {
-            const t = new RegExp(`\\b(${m})\\s+\\d+(?::|\.)\\d+(?:-\\d+)?)*(?:;\\s*\\d+(?::|\.)\\d+(?:-\\d+)?)*\\s*)+`, "gi");
+            const t = new RegExp(`\\b(${m})\\s+\\d+(?::|\\.)\\d+(?:-\\d+)?)*(?:;\\s*\\d+(?::|\\.)\\d+(?:-\\d+)?)*\\s*)+`, "gi");
             return e.replace(t, ((e, t, o) => {
                 const n = e.split(";");
                 if (n.length <= 1) return e;
@@ -132,18 +132,25 @@
             let n = e.nodeValue;
             "my" === t && (n = n.replace(/\u200B/g, ""), n = n.replace(/။/g, "")), n = h(n);
             const r = Object.keys(f).map((e => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("|"),
-                a = new RegExp(`\\b(${r})\\s+(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)(?::|\\.)(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)?|\\b(${r})\\s+(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)(?::|\\.)(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`, "gi");
+                a = new RegExp(
+                    `\\b(${r})\\s+(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)(?::|\\.)(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)?` +
+                    `|\\b(${r})\\s+(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)(?::|\\.)(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`,
+                    "gi"
+                );
             let l = n.replace(a, ((e, t, o, n, r, a, l, s) => {
                 if ("%".charAt(l + e.length) === s) return e;
-                const c = t.trim().toLowerCase(),
-                    d = f[c];
+                const c = t ? t.trim().toLowerCase() : (r ? r.trim().toLowerCase() : null);
+                if (!c) return e;
+                const d = f[c];
                 if (!d) return e;
-                if (x(o, d.cant_capitulos)) return e;
-                let p = `${d.id}.${o}`;
-                n && (p += `.${n}`);
-                const u = a || i;
-                return `<a href="${y(t, d.url, o, n, null, u)}" target="_blank" id_cita="${p}" version="${u}">${e}</a>`
-            }));
+                const chapter = t ? o : a;
+                if (x(chapter, d.cant_capitulos)) return e;
+                let p = `${d.id}.${chapter}`;
+                const verse = t ? n : l;
+                verse && (p += `.${verse}`);
+                const u = s ? s.slice(1, -1) : i;
+                return `<a href="${y(t || r, d.url, chapter, verse, null, u)}" target="_blank" id_cita="${p}" version="${u}">${e}</a>`
+            });
             const s = new RegExp("(\\d+(?::|\\.)\\d+(?:-\\d+)?)+(?:,\\d+(?:-\\d+)?)*)(?![A-Za-z])", "g");
             let c, d = "",
                 p = 0;
