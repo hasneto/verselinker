@@ -36,7 +36,7 @@
             b = new Map;
 
         function h(e) {
-            const t = new RegExp(`\\b(${m})\\s+\\d+(?::\\d+(?:-\\d+)?)*(?:;\\s*\\d+(?::\\d+(?:-\\d+)?)*\\s*)+`, "gi");
+            const t = new RegExp(`\\b(${m})\\s+\\d+(?::|\.)\\d+(?:-\\d+)?)*(?:;\\s*\\d+(?::|\.)\\d+(?:-\\d+)?)*\\s*)+`, "gi");
             return e.replace(t, ((e, t, o) => {
                 const n = e.split(";");
                 if (n.length <= 1) return e;
@@ -69,12 +69,13 @@
 
         function y(e, o, n, r = null, a = null, l = null) {
             e = e.trim();
-            let s = `https://www.bibliatodo.com/${encodeURIComponent(t)}/search-bible?s=${encodeURIComponent(e)}+${encodeURIComponent(n)}`;
-            return r && a ? s += `%3A${encodeURIComponent(r)}-${encodeURIComponent(a)}` : r && (s += `%3A${encodeURIComponent(r)}`), s += l ? `&version=${encodeURIComponent(l)}` : `&version=${encodeURIComponent(i)}`, s
+            const [chapter, verse] = n.split(/[:.]/);
+            let s = `https://www.bibliatodo.com/${encodeURIComponent(t)}/search-bible?s=${encodeURIComponent(e)}+${encodeURIComponent(chapter)}`;
+            return verse ? s += `%3A${encodeURIComponent(verse)}` : s, s += l ? `&version=${encodeURIComponent(l)}` : `&version=${encodeURIComponent(i)}`, s
         }
 
         function $(e, t) {
-            const [o, n] = t.split(":");
+            const [o, n] = t.split(/[:.]/);
             let r = `${e}.${o}`;
             return n && (r += `.${n}`), r
         }
@@ -131,7 +132,7 @@
             let n = e.nodeValue;
             "my" === t && (n = n.replace(/\u200B/g, ""), n = n.replace(/။/g, "")), n = h(n);
             const r = Object.keys(f).map((e => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("|"),
-                a = new RegExp(`\\b(${r})\\s+(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)(?::(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*))?|\\b(${r})\\s+(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)(?::(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*))?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`, "gi");
+                a = new RegExp(`\\b(${r})\\s+(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)(?::|\\.)(\\d+(?:-\\d+)?(?:,\\d+(?:-\\d+)?)*)?|\\b(${r})\\s+(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)(?::|\\.)(\\d+(?:—\\d+)?(?:,\\d+(?:—\\d+)?)*)?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`, "gi");
             let l = n.replace(a, ((e, t, o, n, r, a, l, s) => {
                 if ("%".charAt(l + e.length) === s) return e;
                 const c = t.trim().toLowerCase(),
@@ -143,7 +144,7 @@
                 const u = a || i;
                 return `<a href="${y(t, d.url, o, n, null, u)}" target="_blank" id_cita="${p}" version="${u}">${e}</a>`
             }));
-            const s = new RegExp("(\\d+(?::\\d+(?:-\\d+)?)+(?:,\\d+(?:-\\d+)?)*)(?![A-Za-z])", "g");
+            const s = new RegExp("(\\d+(?::|\\.)\\d+(?:-\\d+)?)+(?:,\\d+(?:-\\d+)?)*)(?![A-Za-z])", "g");
             let c, d = "",
                 p = 0;
             for (; null !== (c = s.exec(l));) {
