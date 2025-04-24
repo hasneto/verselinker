@@ -69,7 +69,7 @@ async function() {
 
     function y(e, o, n, r = null, a = null, l = null) {
       e = e.trim();
-      let s = `https://www.bibliatodo.com/${encodeURIComponent(t)}/search-bible?s=${encodeURIComponent(e)}+${encodeURIComponent(n)}`;
+      let s = `https://www.bibliatodo.com/<span class="math-inline">\{encodeURIComponent\(t\)\}/search\-bible?s\=</span>{encodeURIComponent(e)}+${encodeURIComponent(n)}`;
       return r && a ? s += `%3A${encodeURIComponent(r)}-${encodeURIComponent(a)}` : r && (s += `%3A${encodeURIComponent(r)}`), s += l ? `&version=${encodeURIComponent(l)}` : `&version=${encodeURIComponent(i)}`, s
     }
 
@@ -77,7 +77,7 @@ async function() {
       const partes = t.split(/[.:]/);
       const o = partes[0];
       const n = partes.length > 1 ? partes.slice(1).join(":") : null;
-      let r = `${e}.${o}`;
+      let r = `<span class="math-inline">\{e\}\.</span>{o}`;
       return n && (r += `.${n}`), r
     }
 
@@ -99,7 +99,7 @@ async function() {
         r && r.contains(t.relatedTarget) || t.relatedTarget === e.target || s && s.contains(t.relatedTarget) || (clearTimeout(c), r && (r.remove(), s = null))
       })), c = setTimeout((async () => {
         try {
-          const i = `https://www.bibliatodo.com/api/tooltip/versiculo?id_cita=${t}&version=${o}`,
+          const i = `https://www.bibliatodo.com/api/tooltip/versiculo?id_cita=<span class="math-inline">\{t\}&version\=</span>{o}`,
             l = await fetch(i, {
               method: "GET",
               headers: {
@@ -121,7 +121,7 @@ async function() {
             -1 !== e && d.splice(e, 1)
           }))
         } catch (e) {
-          console.error("Error al cargar el tooltip:", e)
+          console.error("Error al cargar o tooltip:", e)
         }
       }), 50)
     }
@@ -129,27 +129,30 @@ async function() {
     function E(e) {
       let n = e.nodeValue;
       "my" === t && (n = n.replace(/\u200B/g, ""), n = n.replace(/။/g, "")), n = h(n);
-      const r = Object.keys(f).map((e => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("|"),
-        a = new RegExp(`\\b(${r})\\s*(\\d+(?:[.:][\\d-]+)*(?:,\\d+(?:[.:][\\d-]+)*)*)(?::(\\d+(?:[-\u2014]\\d+)?(?:,\\d+(?:[-\u2014]\\d+)?)*))?|\\b(${r})\\s*(\\d+(?:[-\u2014]\\d+)?(?:,\\d+(?:[-\u2014]\\d+)?)*)(?::(\\d+(?:[-\u2014]\\d+)?(?:,\\d+(?:[-\u2014]\\d+)?)*))?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`, "gi");
-      let l = n.replace(a, ((e, t, o, n, r, a, l, s) => {
-        if ("%".charAt(l + e.length) === s) return e;
-        const c = (t || r).trim().toLowerCase(),
-          d = f[c];
-        if (!d) return e;
-        const capitulosVersiculos = o || a;
-        const partesCapVers = capitulosVersiculos.split(/[.:]/);
-        const capitulo = partesCapVers[0];
-        const versiculos = partesCapVers.length > 1 ? partesCapVers.slice(1).join(":") : null;
+      const r = Object.keys(f).map((e => e.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("|");
+      const a = new RegExp(`\\b(<span class="math-inline">\{r\}\)\\\\s\*\(\\\\d\+\)\(\[\.\:\]\(\\\\d\+\(?\:\[\-\\u2014\]\\\\d\+\)?\(?\:,\\\\d\+\(?\:\[\-\\u2014\]\\\\d\+\)?\)\*\)\)?\|\\\\b\(</span>{r})(\\d+)([.:](\\d+(?:[-\u2014]\\d+)?(?:,\\d+(?:[-\u2014]\\d+)?)*))?\\s*(\\(([A-Za-z0-9-]{1,20})\\))?`, "gi");
+      let l = n.replace(a, ((match, book1, chapter1, separator1, verses1, book2, chapter2, separator2, verses2, version) => {
+        const book = book1 || book2;
+        const chapter = chapter1 || chapter2;
+        const verses = verses1 || verses2 || null;
+        const actualSeparator = separator1 || separator2 || ":"; // Default para : se não houver
 
-        if (x(capitulo, d.cant_capitulos)) return e;
+        if (!book || !chapter) {
+          return match;
+        }
 
-        let p = `${d.id}.${capitulo}`;
-        versiculos && (p += `.${versiculos}`);
-        const u = l || i;
+        const bookLower = book.trim().toLowerCase();
+        const bookData = f[bookLower];
 
-        const linkVersiculo = versiculos ? versiculos.replace(/[-\u2014]/g, "-") : null;
+        if (!bookData || x(chapter, bookData.cant_capitulos)) {
+          return match;
+        }
 
-        return `<a href="${y(c, d.url, capitulo, linkVersiculo, null, u)}" target="_blank" id_cita="${p}" version="${u}">${e}</a>`
+        const citaId = `<span class="math-inline">\{bookData\.id\}\.</span>{chapter}${verses ? `.${verses.replace(/[-\u2014]/g, "-")}` : ""}`;
+        const urlVerses = verses ? verses.replace(/[-\u2014]/g, "-") : null;
+        const versionAttr = version || i;
+
+        return `<a href="<span class="math-inline">\{y\(book, bookData\.url, chapter, urlVerses, null, versionAttr\)\}" target\="\_blank" id\_cita\="</span>{citaId}" version="<span class="math-inline">\{versionAttr\}"\></span>{match}</a>`;
       }));
       const s = new RegExp("(\\d+(?::\\d+(?:[-\u2014]\\d+)?)+(?:,\\d+(?::\\d+(?:[-\u2014]\\d+)?)*))(?![A-Za-z])", "g");
       let c, d = "",
@@ -170,7 +173,7 @@ async function() {
             let n = $(e.id, t);
             const r = i,
               [a, l] = t.split(/[:.]/);
-            d += `<a href="${y(o, e.url, a, l, null, r)}" target="_blank" id_cita="${n}" version="${r}">${t}</a>`
+            d += `<a href="<span class="math-inline">\{y\(o, e\.url, a, l, null, r\)\}" target\="\_blank" id\_cita\="</span>{n}" version="<span class="math-inline">\{r\}"\></span>{t}</a>`
           } else d += t
         } else d += t;
         p = s.lastIndex
@@ -185,33 +188,4 @@ async function() {
 
     function w(e) {
       e.childNodes.forEach((e => {
-        e.nodeType === Node.TEXT_NODE ? E(e) : e.nodeType !== Node.ELEMENT_NODE || ["script", "style", "iframe", "noscript"].includes(e.tagName.toLowerCase()) || w(e)
-      }))
-    }
-    if ("false" !== r) {
-      const T = new RegExp(`^(?:(${m})\\s*\\d+(?:[.:][\\d-]+)*(?:,\\d+(?:[.:][\\d-]+)*)*|\\d+(?:[.:][\\d-]+)*(?:,\\d+(?:[.:][\\d-]+)*)*$)`, "i");
-      document.body.querySelectorAll("a[href]").forEach((e => {
-        if (!e.hasAttribute("id_cita")) {
-          const t = (e.textContent || "").trim();
-          T.test(t) && e.replaceWith(document.createTextNode(t))
-        }
-      })), function e(t) {
-        let o = t.firstChild;
-        for (; o;) {
-          if (o.nodeType === Node.TEXT_NODE) {
-            let e = o.nextSibling;
-            for (; e && e.nodeType === Node.TEXT_NODE;) {
-              o.nodeValue += e.nodeValue;
-              const n = e;
-              e = e.nextSibling, t.removeChild(n)
-            }
-          } else o.nodeType === Node.ELEMENT_NODE && e(o);
-          o = o.nextSibling
-        }
-      }(document.body)
-    }
-    w(document.body)
-  } catch (C) {
-    console.error(`Error al cargar o procesar o JSON: ${C}`)
-  }
-}();
+        e.nodeType === Node.TEXT_NODE
