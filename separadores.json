@@ -1,0 +1,26 @@
+{
+  "default": {
+    "separador_capitulo_versiculo": ":",
+    "separador_varios_versiculos": ",",
+    "separador_varias_referencias": ";",
+    "separador_rango": "-"
+  },
+  "en": {
+    "separador_capitulo_versiculo": ":",
+    "separador_varios_versiculos": ",",
+    "separador_varias_referencias": ";",
+    "separador_rango": "-"
+  },
+  "pt": {
+    "separador_capitulo_versiculo": [":", "."],
+    "separador_varios_versiculos": ",",
+    "separador_varias_referencias": ";",
+    "separador_rango": ["-", "—"]
+  },
+  "es": {
+    "separador_capitulo_versiculo": ":",
+    "separador_varios_versiculos": ",",
+    "separador_varias_referencias": ";",
+    "separador_rango": "-"
+  }
+}
