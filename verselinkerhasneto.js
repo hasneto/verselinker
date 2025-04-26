@@ -11,7 +11,7 @@ $(document).ready(function() {
                 let content = $(this).html();
 
                 // Regex para identificar as citações
-                const regex = /(\b(?:Obadias|Filemom|2 João|3 João|Judas)\s+\d+:\d+(?:-\d+)?(?:,\s*\d+:\d+)?(?:\s*-\s*\d+)?(?:—\d+)?|\b(?:Obadias|Filemom|2 João|3 João|Judas)\s+\d+(?:\s*-\s*\d+)?|\b(?:Obadias|Filemom|2 João|3 João|Judas)\s+\d+)\b/g;
+                const regex = /(\b(?:João|Mateus|Obadias|Filemom|2 João|3 João|Judas)\s+\d+[:.]\d+(?:[-—]\d+)?(?:,\s*\d+[:.]\d+)?|\b(?:João|Mateus|Obadias|Filemom|2 João|3 João|Judas)\s+\d+(?:[-—]\d+)?|\b(?:João|Mateus|Obadias|Filemom|2 João|3 João|Judas)\s+\d+)\b/g;
 
                 content = content.replace(regex, function(match) {
                     // Aqui você pode buscar o texto exato da citação no bibleData
