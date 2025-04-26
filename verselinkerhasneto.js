@@ -1,5 +1,5 @@
 // verserlinkerhasneto.js
-$(document).ready(function() {
+jQuery(document).ready(function($) {
     // Carregar os arquivos JSON
     const bibleUrl = "https://hasneto.github.io/verselinker/NAA.json";
     const citationUrl = "https://hasneto.github.io/verselinker/pt.json";
